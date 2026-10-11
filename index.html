@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Exercise Plan</title>
+<meta name="theme-color" content="#E8ECE8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1211" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Exercise Plan">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px system-ui,-apple-system,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sticky tab strip, one column of full-width tap rows; Summary is a tile dashboard. Chalk light, rubber-floor dark, plate-red accent. */
+:root{
+  --bg:#E8ECE8; --surface:#FBFCFA; --ink:#141817; --muted:#5C6561; --line:#CBD2CD;
+  --accent:#C8322B; --done:#2C7A4D; --done-soft:#D8EADF;
+  --display:"Big Shoulders Display","Arial Narrow","Roboto Condensed",sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1211; --surface:#181C1A; --ink:#E7ECE8; --muted:#8B9590; --line:#2B322E;
+  --accent:#F0544B; --done:#54C283; --done-soft:#1A2D22; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1211; --surface:#181C1A; --ink:#E7ECE8; --muted:#8B9590; --line:#2B322E;
+  --accent:#F0544B; --done:#54C283; --done-soft:#1A2D22; color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.4;padding-inline:16px;padding-block:0 48px;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0;text-align:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* tab strip */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);margin-inline:-16px;padding:0 16px;border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 0 10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;min-width:54px;padding:8px 10px 7px;border-radius:10px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:5px;font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.03em;text-transform:uppercase;background:var(--surface)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tab .bar{width:100%;height:3px;border-radius:2px;background:var(--line);overflow:hidden}
+.tab .bar i{display:block;height:100%;background:var(--accent)}
+.tab .bar.full i{background:var(--done)}
+.tab[aria-selected="true"] .bar{background:color-mix(in srgb,var(--bg) 30%,transparent)}
+
+/* day header */
+.dayhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:20px 0 14px}
+.dayhead > div{min-width:0}
+h1{font-family:var(--display);font-weight:800;font-size:40px;line-height:.95;margin:4px 0 0;text-transform:uppercase;text-wrap:balance}
+.left{flex:0 0 auto;text-align:right}
+.left .v{font-family:var(--display);font-weight:800;font-size:44px;line-height:.9;color:var(--accent)}
+.left.ok .v{color:var(--done)}
+.progress{display:block;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.progress.full i{background:var(--done)}
+
+/* checklist */
+.list{display:grid;gap:8px;margin-top:16px}
+.item{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;transition:background .2s,border-color .2s}
+.box{flex:0 0 auto;width:32px;height:32px;border-radius:9px;border:2px solid var(--line);display:grid;place-items:center;transition:background .15s,border-color .15s}
+.box svg{width:20px;height:20px;stroke:transparent;stroke-width:3.2;fill:none}
+.name{font-weight:700;font-size:19px;line-height:1.2;min-width:0;text-decoration-thickness:2px;text-decoration-color:var(--done)}
+.item.done{background:var(--done-soft);border-color:color-mix(in srgb,var(--done) 30%,var(--line))}
+.item.done .box{background:var(--done);border-color:var(--done)}
+.item.done .box svg{stroke:var(--surface)}
+.item.done .name{text-decoration-line:line-through;color:var(--muted);font-weight:500}
+.foot{display:flex;justify-content:flex-end;margin-top:16px}
+.ghost{font-size:13px;font-weight:600;color:var(--muted);padding:9px 12px;border:1px solid var(--line);border-radius:10px}
+.ghost.armed{color:var(--accent);border-color:var(--accent)}
+.alldone{margin-top:16px;padding:14px;border-radius:14px;background:var(--done);color:var(--surface);font-weight:700;font-size:17px;text-align:center}
+
+/* summary dashboard */
+.hero{margin-top:20px;background:var(--ink);color:var(--bg);border-radius:18px;padding:18px;display:grid;gap:14px}
+.hero .eyebrow{color:color-mix(in srgb,var(--bg) 65%,transparent)}
+.big{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.big b{font-family:var(--display);font-weight:800;font-size:64px;line-height:.85}
+.big span{font-weight:600;font-size:16px;opacity:.8}
+.segs{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:5px}
+.seg{display:grid;gap:5px;text-align:center}
+.seg i{display:block;height:28px;border-radius:6px;background:color-mix(in srgb,var(--bg) 18%,transparent);overflow:hidden;position:relative}
+.seg i u{position:absolute;inset:auto 0 0 0;background:var(--accent)}
+.seg i u.full{background:var(--done)}
+.seg small{font-size:11px;font-weight:600;letter-spacing:.06em;opacity:.75}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.stat .v{font-family:var(--display);font-weight:800;font-size:34px;line-height:1;margin-top:6px}
+.stat .v small{font-family:var(--body);font-size:13px;font-weight:600;color:var(--muted);margin-left:3px}
+h2{font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.02em;margin:26px 0 10px}
+
+/* push-ups */
+.push{display:grid;gap:12px;margin-top:10px}
+.push .big b{font-size:52px}
+.push .big span{color:var(--muted);opacity:1}
+.push .pace{font-size:14px;color:var(--muted)}
+.push.full .big b{color:var(--done)}
+.adds{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.add{height:48px;border-radius:12px;background:var(--accent);color:var(--surface);font-weight:700;font-size:17px;text-align:center}
+.custom{display:flex;gap:8px}
+.custom input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:16px}
+.btn{padding:11px 16px;border-radius:10px;font-weight:600;background:var(--ink);color:var(--bg);border:1px solid var(--ink);text-align:center}
+.btn.line{background:transparent;color:var(--ink);border-color:var(--line)}
+.undo{justify-self:start}
+
+.days{display:grid;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.drow{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:start;padding:12px 14px;border-top:1px solid var(--line)}
+.drow:first-child{border-top:0}
+.drow .tag{font-family:var(--display);font-weight:800;font-size:18px;text-transform:uppercase;line-height:1.3}
+.drow .g{min-width:0;display:grid;gap:6px}
+.drow .g b{font-weight:600;font-size:15px}
+.drow .progress{height:4px}
+.drow .todo{font-size:13px;color:var(--muted);line-height:1.35}
+.drow .c{font-size:14px;color:var(--muted);line-height:1.6}
+.drow .c.ok{color:var(--done);font-weight:700}
+.reset{display:grid;gap:8px;margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.reset .note{color:var(--muted);font-size:14px;margin:0}
+.reset .ghost{justify-self:start;font-size:15px;padding:11px 16px}
+
+/* cardio */
+.quick{display:grid;gap:10px}
+.qbtn{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.qbtn .t{font-weight:700;font-size:18px}
+.qbtn .d{font-size:14px;color:var(--muted)}
+.plus{flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:var(--accent);color:var(--surface);display:grid;place-items:center;font-size:26px;font-weight:600;line-height:1}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.field{display:grid;gap:4px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);min-width:0}
+.field input,.field select{width:100%;min-width:0;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:16px;letter-spacing:0;text-transform:none}
+.form .btn{grid-column:1/-1}
+.log{display:grid;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.lrow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.lrow:first-child{border-top:0}
+.lrow .when{font-size:14px;color:var(--muted);width:84px;flex:0 0 auto}
+.lrow .what{flex:1;font-weight:600;min-width:0}
+.x{font-size:13px;color:var(--muted);padding:6px 8px;border-radius:8px;border:1px solid var(--line)}
+.empty{padding:16px 14px;color:var(--muted);font-size:15px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<header class="top"><nav class="tabs" id="tabs" role="tablist"></nav></header>
+<main id="main"></main>
+
+<script>
+/* The plan. Edit here to change exercises. */
+const PLAN = [
+  {id:'d1',label:'Day 1',short:'D1',group:'Back + Triceps',items:['Pull Ups','Seated Cable Row','Skull Crushers','Triceps Pull Down']},
+  {id:'d2',label:'Day 2',short:'D2',group:'Chest + Shoulders',items:['Shoulder Press','Flat Bench Press','Dumbbell Lateral Raise','Cable Fly','Front Plate Raise']},
+  {id:'d3',label:'Day 3',short:'D3',group:'Back + Biceps',items:['Pull Ups','Seated Cable Row','Barbell Curl','Bicep Curl','Goblet Squat','Bent Over Row']},
+  {id:'d4',label:'Day 4',short:'D4',group:'Chest + Shoulders',items:['Bench Press','Shoulder Press','Dumbbell Fly','Pec Fly','Dips','Barbell Curl','Hammer Curl']}
+].map(d => ({...d, items:d.items.map(n => ({id:n.toLowerCase().replace(/[^a-z0-9]+/g,'-'), name:n}))}));
+const LISS_MIN = 35;
+const PUSH_GOAL = 2000;
+const KEY = 'gymcheck.v3';
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt = n => n.toLocaleString('en-SG');
+const fresh = tab => ({done:{}, cardio:[], push:[], tab: tab || 'd1', planVer: 2});
+
+let state = null;
+try { state = JSON.parse(localStorage.getItem(KEY)); } catch(e) {}
+if (!state || typeof state.done !== 'object') state = fresh();
+state.cardio = state.cardio || []; state.push = state.push || [];
+const PLAN_VER = 2;
+if (state.planVer !== PLAN_VER) { state.done = {}; state.planVer = PLAN_VER; if (!PLAN.some(d => d.id === state.tab) && state.tab !== 'cardio' && state.tab !== 'summary') state.tab = 'd1'; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} };
+let armed = null, armTimer = null;
+
+const ymd = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
+const dayById = id => PLAN.find(d => d.id === id);
+const isDone = (d,x) => !!state.done[d+'/'+x];
+function dayStats(day){ const left = day.items.filter(it => !isDone(day.id,it.id)); const total = day.items.length; return {done: total-left.length, total, left, pct: total ? (total-left.length)/total : 0}; }
+const lissSets = () => state.cardio.length;
+const pushTotal = () => state.push.reduce((s,n) => s + n, 0);
+const tick = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+function arm(key){ clearTimeout(armTimer); if (armed === key) return true; armed = key; render(); armTimer = setTimeout(() => { armed = null; render(); }, 3000); return false; }
+
+function render(){
+  renderTabs();
+  const t = state.tab;
+  $('#main').innerHTML = t==='summary' ? renderSummary() : t==='cardio' ? renderCardio() : renderDay(dayById(t) || PLAN[0]);
+}
+
+function renderTabs(){
+  const tabs = [...PLAN, {id:'cardio',short:'LISS'}, {id:'summary',short:'Summary'}];
+  $('#tabs').innerHTML = tabs.map(t => {
+    let bar = '';
+    if (t.items) { const s = dayStats(t); bar = `<span class="bar ${s.pct===1?'full':''}"><i style="width:${s.pct*100}%"></i></span>`; }
+    else if (t.id==='summary') { const p = Math.min(1, pushTotal()/PUSH_GOAL); bar = `<span class="bar ${p===1?'full':''}"><i style="width:${p*100}%"></i></span>`; }
+    else bar = `<span class="bar ${state.cardio.length?'full':''}"><i style="width:${state.cardio.length?100:0}%"></i></span>`;
+    return `<button class="tab" role="tab" aria-selected="${state.tab===t.id}" data-act="tab" data-tab="${t.id}">${esc(t.short)}${bar}</button>`;
+  }).join('');
+  const a = $('.tab[aria-selected="true"]'); if (a) a.scrollIntoView({inline:'nearest',block:'nearest'});
+}
+
+function renderDay(day){
+  const s = dayStats(day), ok = s.left.length === 0;
+  return `<div class="dayhead"><div><div class="eyebrow num">${day.label} &middot; ${s.done} of ${s.total} exercises</div><h1>${esc(day.group)}</h1></div>
+      <div class="left ${ok?'ok':''}"><div class="v num">${ok ? '&#10003;' : s.left.length}</div><div class="eyebrow">${ok ? 'Done' : 'Left'}</div></div></div>
+    <div class="progress ${ok?'full':''}"><i style="width:${s.pct*100}%"></i></div>
+    <div class="list">${day.items.map(it => {
+      const d = isDone(day.id,it.id);
+      return `<button class="item ${d?'done':''}" role="checkbox" aria-checked="${d}" data-act="toggle" data-day="${day.id}" data-ex="${it.id}"><span class="box">${tick}</span><span class="name">${esc(it.name)}</span></button>`;
+    }).join('')}</div>
+    ${ok ? `<div class="alldone">${esc(day.group)} done. Nice work.</div>` : ''}
+    <div class="foot"><button class="ghost ${armed===day.id?'armed':''}" data-act="untick" data-day="${day.id}">${armed===day.id?'Tap again to untick all':'Untick all'}</button></div>`;
+}
+
+function renderPush(){
+  const total = pushTotal(), p = Math.min(1, total/PUSH_GOAL), left = Math.max(0, PUSH_GOAL-total);
+  const daysLeft = 7 - (new Date().getDay()+6)%7;
+  const pace = left === 0 ? 'Goal hit for this week.' : `${fmt(left)} to go. About ${fmt(Math.ceil(left/daysLeft))} a day to finish by Sunday.`;
+  return `<section class="panel push ${p===1?'full':''}">
+      <div><div class="eyebrow">Push-ups this week</div>
+      <div class="big num"><b>${fmt(total)}</b><span>/ ${fmt(PUSH_GOAL)}</span></div></div>
+      <span class="progress ${p===1?'full':''}"><i style="width:${p*100}%"></i></span>
+      <div class="pace num">${pace}</div>
+      <div class="custom"><input id="p-n" type="number" inputmode="numeric" min="1" placeholder="Number of push-ups" aria-label="Push-ups to add"><button class="btn" data-act="pushc">Add</button></div>
+      ${state.push.length ? `<button class="ghost undo num" data-act="pundo">Undo last (+${state.push[state.push.length-1]})</button>` : ''}
+    </section>`;
+}
+
+function renderSummary(){
+  let full = 0, exDone = 0, exTotal = 0;
+  PLAN.forEach(d => { const s = dayStats(d); exDone += s.done; exTotal += s.total; if (s.pct===1) full++; });
+  const segs = PLAN.map(d => { const s = dayStats(d); return `<div class="seg"><i><u class="${s.pct===1?'full':''}" style="height:${s.pct*100}%"></u></i><small>${d.short}</small></div>`; }).join('');
+  const rows = PLAN.map(d => {
+    const s = dayStats(d), ok = s.pct===1;
+    const todo = ok ? '' : s.done===0 ? `<span class="todo">Not started</span>` : `<span class="todo">Left: ${s.left.map(i => esc(i.name)).join(', ')}</span>`;
+    return `<button class="drow" data-act="tab" data-tab="${d.id}"><span class="tag">${d.short}</span>
+      <span class="g"><b>${esc(d.group)}</b><span class="progress ${ok?'full':''}"><i style="width:${s.pct*100}%"></i></span>${todo}</span>
+      <span class="c num ${ok?'ok':''}">${ok?'Done':s.done+'/'+s.total}</span></button>`;
+  }).join('');
+  return `<section class="hero">
+      <div><div class="eyebrow">Workouts completed</div>
+      <div class="big num"><b>${full}/${PLAN.length}</b></div></div>
+      <div class="segs" style="--n:${PLAN.length}">${segs}</div>
+    </section>
+    <div class="stats">
+      <div class="panel stat"><div class="eyebrow">Exercises done</div><div class="v num">${exDone}<small>of ${exTotal}</small></div></div>
+      <div class="panel stat"><div class="eyebrow">LISS sets</div><div class="v num">${lissSets()}</div></div>
+    </div>
+    ${renderPush()}
+    <h2>By day</h2><div class="days">${rows}</div>
+    <div class="reset">
+      <p class="note">Starting a new week clears all ticks, LISS sets and push-ups.</p>
+      <button class="ghost ${armed==='week'?'armed':''}" data-act="newweek">${armed==='week'?'Tap again to clear everything':'Start new week'}</button>
+    </div>`;
+}
+
+function renderCardio(){
+  const list = [...state.cardio].reverse().map(c =>
+    `<div class="lrow"><span class="when">${parse(c.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}</span>
+     <span class="what">LISS set</span><button class="x" data-act="delc" data-id="${c.id}">Remove</button></div>`).join('');
+  const n = lissSets();
+  return `<div class="dayhead"><div><div class="eyebrow">Cardio</div><h1>LISS</h1></div>
+      <div class="left ${n?'ok':''}"><div class="v num">${n}</div><div class="eyebrow">Sets</div></div></div>
+    <div class="quick"><button class="qbtn" data-act="liss"><span class="t">Log 1 set</span><span class="plus" aria-hidden="true">+</span></button></div>
+    <h2>This week</h2>
+    <div class="log">${list || '<div class="empty">No LISS sets yet. Tap the button above after each set.</div>'}</div>`;
+}
+
+function addLiss(){ state.cardio.push({id:Date.now().toString(36), type:'LISS', min:LISS_MIN, date: ymd(new Date())}); save(); render(); }
+function addPush(n){ n = Math.round(n); if (!(n > 0)) return; state.push.push(n); save(); render(); }
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const {act, day, ex} = b.dataset;
+  if (act==='tab'){ state.tab = b.dataset.tab; save(); render(); window.scrollTo(0,0); }
+  else if (act==='toggle'){ const k = day+'/'+ex; if (state.done[k]) delete state.done[k]; else state.done[k] = true; save(); render(); }
+  else if (act==='untick'){ if (arm(day)) { Object.keys(state.done).forEach(k => { if (k.startsWith(day+'/')) delete state.done[k]; }); armed = null; save(); render(); } }
+  else if (act==='newweek'){ if (arm('week')) { state = fresh('d1'); armed = null; save(); render(); window.scrollTo(0,0); } }
+  else if (act==='push') addPush(+b.dataset.n);
+  else if (act==='pushc') addPush(parseInt($('#p-n').value));
+  else if (act==='pundo'){ state.push.pop(); save(); render(); }
+  else if (act==='liss') addLiss();
+  else if (act==='delc'){ state.cardio = state.cardio.filter(c => c.id !== b.dataset.id); save(); render(); }
+});
+document.addEventListener('keydown', e => { if (e.key==='Enter' && e.target.id==='p-n') addPush(parseInt(e.target.value)); });
+render();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
+</body>
+</html>
